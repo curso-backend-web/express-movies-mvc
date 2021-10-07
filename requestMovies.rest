@@ -2,8 +2,8 @@ POST http://localhost:3000/movies
 Content-Type: application/json
 
 {
-      "id": 6,
-      "title": "Curso Back-End Web"
+      "id": 11,
+      "title": "Curso Back-End Web 2"
 }
 
 ###########
@@ -16,6 +16,29 @@ GET http://localhost:3000/movies/
 Authorization: bearer 1234
 
 ############
+
+GET http://localhost:3000/holapaola
+
+############
+
+GET http://localhost:3000/movies/1
+
+############
+
+DELETE  http://localhost:3000/movies/2
+
+############
+
+DELETE  http://localhost:3000/movies/
+Content-Type: application/json
+
+{
+      "id": 1
+}
+
+############
+
+
 
 PUT http://localhost:3000/movies/1
 Content-Type: application/json
