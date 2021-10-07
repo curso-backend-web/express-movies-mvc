@@ -12,10 +12,26 @@ GET http://localhost:3000/lukesoytupadre
 
 ###########
 
-GET http://localhost:3000/movies/
-Authorization:bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNweWRlciIsImlhdCI6MTYzMzYwMzkyN30.7Rbv0ABjGQp3u5uIyFHlwVnlXeX4h5D4Pmhd6yqD9_s
+GET https://api-movies-rgl.herokuapp.com/rutas/?origen=BCN&&destino=MOW
+Authorization:bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNweWRlciIsImlhdCI6MTYzMzYwNzAzMH0.a5VDZGenqzKVI0VbLUP8k2Lh43ogahbnbHICcblIZRI
 
+... body {
+      [{ori,destino, airport, avion},{ori,de}]
+
+}
 ############
+GET https://api-movies-rgl.herokuapp.com/users/misRutas
+Authorization: 
+
+
+POST https://api-movies-rgl.herokuapp.com/users/misRutas
+Authorization: token
+
+{
+
+     [{ori,destino, airport, avion},{ori,de}]
+
+}
 
 GET http://localhost:3000/holapaola
 
@@ -57,3 +73,6 @@ Authorization: bearer 1234
 {
       "id":1
 }
+
+
+GET http://..../routes/m

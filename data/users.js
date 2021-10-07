@@ -1,6 +1,7 @@
 export default [
     {
     username:'peter',
-    password:'pan'
+    password:'pan',
+    routes:[]
     }
 ]
