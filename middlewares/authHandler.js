@@ -33,14 +33,15 @@ const getTokenFrom = request => {
     const authorization = request.get('authorization');
 
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        
         return authorization.substring(7);
     } else {
         return null;
     }
 }
-const SECRET = 'misecreto';
 
-const tokenVerify = token => jwt.verify(token, SECRET);
+
+const tokenVerify = token => jwt.verify(token, process.env.SECRET);
 
 const authUser = (req, res, next) => {
 
@@ -51,7 +52,7 @@ const authUser = (req, res, next) => {
     if (!token || !decodedToken.username) {
         next(HttpError(401, { message: 'token invalid or missing' }))
     } else {
-        const user = userModel.getUser(decodedToken.username);
+        const user = userModel.getUser({username:decodedToken.username});
         user === undefined ? next(HttpError(401, { message: 'El token no es correcto' })) :
             next();
     }
@@ -60,7 +61,7 @@ const authUser = (req, res, next) => {
 
 const generateToken = username => {
 
-    const token = jwt.sign({username: username},SECRET);
+    const token = jwt.sign({username: username},process.env.SECRET);
   
     return token;
 }

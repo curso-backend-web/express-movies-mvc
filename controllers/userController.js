@@ -49,17 +49,21 @@ const login = async (req, res, next) => {
         if (!body.username || !body.password) {
             next(HttpError(400, { message: 'Error en los parámetros de entrada' }))
         } else {
-            const user = { username: body.username, password: body.password };
-
-            const result = userModel.getUser(user);
+            
+            const result = userModel.getUser({ username: body.username });
 
             if (result === undefined) {
-                next(HttpError(400, { message: 'Username or Password incorrect' }));
+                next(HttpError(401, { message: 'Username or Password incorrect' }));
             } else {
-                await bcrypt.compare(body.password, result.password);
-                //GENERAMOS EL TOKEN
-                const token = authHandler.generateToken(body.username);
-                res.status(200).json({ token: token });
+                const passwordCorrect = await bcrypt.compare(body.password, result.password);
+                if (!passwordCorrect) {
+                    next(HttpError(401, { message: 'Username or Password incorrect' }));
+                }
+                else {
+                    //GENERAMOS EL TOKEN
+                    const token = authHandler.generateToken(body.username);
+                    res.status(200).json({ token: token });
+                }
             }
         }
     }
