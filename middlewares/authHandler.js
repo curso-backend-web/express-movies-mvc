@@ -43,11 +43,11 @@ const getTokenFrom = request => {
 
 const tokenVerify = token => jwt.verify(token, process.env.SECRET);
 
-const authUser = (req, res, next) => {
+const authUser = async (req, res, next) => {
 
     const token = getTokenFrom(req);
 
-    const decodedToken = tokenVerify(token);
+    const decodedToken = await tokenVerify(token);
 
     if (!token || !decodedToken.username) {
         next(HttpError(401, { message: 'token invalid or missing' }))
@@ -61,9 +61,9 @@ const authUser = (req, res, next) => {
 
 const generateToken = username => {
 
-    const token = jwt.sign({username: username},process.env.SECRET);
+    return jwt.sign({username: username},process.env.SECRET);
   
-    return token;
+
 }
 
 

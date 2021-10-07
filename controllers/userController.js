@@ -61,7 +61,7 @@ const login = async (req, res, next) => {
                 }
                 else {
                     //GENERAMOS EL TOKEN
-                    const token = authHandler.generateToken(body.username);
+                    const token = await authHandler.generateToken(body.username);
                     res.status(200).json({ token: token });
                 }
             }
