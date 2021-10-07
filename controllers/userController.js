@@ -1,6 +1,7 @@
 import HttpError from "http-errors";
 import userModel from "../models/userModel.js";
 import bcrypt from 'bcrypt';
+import authHandler from "../middlewares/authHandler.js";
 
 // const checkUserPassword = (req,res)
 
@@ -10,7 +11,7 @@ import bcrypt from 'bcrypt';
 //     return bcrypt.hash(password, saltRounds)
 // }
 
-const register = async (req, res, next) => {
+const register = (req, res, next) => {
 
     try {
         const body = req.body;
@@ -50,13 +51,14 @@ const login = async (req, res, next) => {
         } else {
             const user = { username: body.username, password: body.password };
 
-            const result = userModel.loginUser(user);
+            const result = userModel.getUser(user);
 
             if (result === undefined) {
                 next(HttpError(400, { message: 'Username or Password incorrect' }));
             } else {
                 await bcrypt.compare(body.password, result.password);
-                const token = '1234';
+                //GENERAMOS EL TOKEN
+                const token = authHandler.generateToken(body.username);
                 res.status(200).json({ token: token });
             }
         }

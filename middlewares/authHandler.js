@@ -1,5 +1,7 @@
 import HttpError from "http-errors";
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import userModel from "../models/userModel.js";
 
 
 
@@ -27,26 +29,45 @@ const encryptPassword = async (req, res, next) => {
 //         next(error);
 //     }
 
+const getTokenFrom = request => {
+    const authorization = request.get('authorization');
+
+    if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+        return authorization.substring(7);
+    } else {
+        return null;
+    }
+}
+const SECRET = 'misecreto';
+
+const tokenVerify = token => jwt.verify(token, SECRET);
+
 const authUser = (req, res, next) => {
 
-    const authorization = req.get('authorization');
+    const token = getTokenFrom(req);
 
-    if (!authorization) {
-        next(HttpError(401, { message: 'No hay token' }));
+    const decodedToken = tokenVerify(token);
+
+    if (!token || !decodedToken.username) {
+        next(HttpError(401, { message: 'token invalid or missing' }))
     } else {
-        const token = authorization.substring(7);
-
-        //desencriptar el token para obtener el user
-        //comparar el usuario del token con el usuario de la bd
-        //obtenemos fecha caducidad token
-
-        token ? next() : next(HttpError(401, { message: 'El token no es correcto' }))
-
+        const user = userModel.getUser(decodedToken.username);
+        user === undefined ? next(HttpError(401, { message: 'El token no es correcto' })) :
+            next();
     }
 
 }
 
+const generateToken = username => {
+
+    const token = jwt.sign({username: username},SECRET);
+  
+    return token;
+}
+
+
 export default {
     authUser,
-    encryptPassword
+    encryptPassword,
+    generateToken
 };

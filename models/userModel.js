@@ -5,7 +5,7 @@ class User{
         users.push(user);
         return users.find(element => element.username == user.username);
     }
-    loginUser(user){
+    getUser(user){
         return users.find(element => (element.username == user.username))
     }
 }
