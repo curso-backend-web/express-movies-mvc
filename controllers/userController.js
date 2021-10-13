@@ -26,7 +26,6 @@ const register = (req, res, next) => {
             const user = { username: body.username, password: body.password };
 
             const result = userModel.createUser(user);
-
             if (result < 0)
                 next(HttpError(400, { message: 'No se pudo registrar' }))
 
