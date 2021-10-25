@@ -1,5 +1,5 @@
 import app from "./app.js";
 
-// const PORT = 3000;
+ const PORT = process.env.PORT || 3000;
 
-app.listen(process.env.PORT,()=>console.log(`listening on ${process.env.PORT}`));
+app.listen(PORT,()=>console.log(`listening on ${PORT}`));
