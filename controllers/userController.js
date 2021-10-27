@@ -11,7 +11,7 @@ import authHandler from "../middlewares/authHandler.js";
 //     return bcrypt.hash(password, saltRounds)
 // }
 
-const register = (req, res, next) => {
+const register = async (req, res, next) => {
 
     try {
         const body = req.body;
@@ -20,20 +20,20 @@ const register = (req, res, next) => {
             next(HttpError(400, { message: 'Error en los parámetros de entrada' }))
         } else {
 
+            const user = { username: body.username, 
+                           password: body.password, 
+                           role:body.role ||'user' 
+                        };
 
-            // const passwordHash = await encrypt(body.password);
-
-            const user = { username: body.username, password: body.password };
-
-            const result = userModel.createUser(user);
-            if (result < 0)
+            const result = await userModel.createUser(user);
+            if (!result.length)
                 next(HttpError(400, { message: 'No se pudo registrar' }))
 
             res.status(201).json(result);
         }
 
     } catch (error) {
-        next(error);
+        next(HttpError(400, { message:error.message}));
     }
 
 

@@ -13,7 +13,7 @@ class MySqlManager {
             
             this.connection = await mysql.createConnection(db);
         } catch (error) {
-            console.log(error);
+            throw error;
         }
     }
 
@@ -27,13 +27,14 @@ class MySqlManager {
     async query(sql, params){
         try {
             await this._createConnection(this.db);
-            const [results,field]= await this.connection.execute(sql,params);
+            const [results,field,error] = await this.connection.execute(sql,params);
+            if(error) throw error;
             await this._dropConnection();
 
             return results;
 
         } catch (error) {
-            
+            throw error;
         }
     }
 

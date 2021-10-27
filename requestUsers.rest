@@ -3,7 +3,8 @@ Content-Type: application/json
 
 {
     "username":"spyder",
-    "password":"man"
+    "password":"man",
+    "role":"user"
 }
 ##########
 POST http://localhost:3000/users/login

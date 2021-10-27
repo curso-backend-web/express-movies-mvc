@@ -1,5 +1,7 @@
-import Connection from 'mysql2/typings/mysql/lib/Connection';
-import users from '../data/users.js';
+// import users from '../data/users.js';
+import connection from '../mysql/dbManager.js';
+
+const spy = jest.SpyOn(connection,'query').mockImplementation(()=>Promise.resolve([{insertId: 1}]))
 
 class User{
 
@@ -10,18 +12,24 @@ class User{
     }
     
 
-    createUser(user){
+    async createUser(user){
 
-        connection.query(
-            `call insert_user(?,?,?)`,
-            [user,password,role] 
-        )
-        users.push(user);
-        return users.find(element => element.username == user.username);
+        try {
+            const result = await connection.query(
+                `call insert_user(?,?,?)`,
+                [user.username,user.password,user.role] 
+            )
+            // users.push(user);
+            // return users.find(element => element.username == user.username);
+            return result;
+                
+        } catch (error) {
+            throw error;
+        }
     }
-    getUser(user){
-        return users.find(element => (element.username == user.username))
-    }
+    // getUser(user){
+    //     return users.find(element => (element.username == user.username))
+    // }
 }
 
 export default new User();
