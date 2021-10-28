@@ -14,16 +14,11 @@ import authHandler from "../middlewares/authHandler.js";
 const register = async (req, res, next) => {
 
     try {
-        const body = req.body;
+        const user = req.body;
 
-        if (!body.username || !body.password) {
+        if (!user.username || !user.password) {
             next(HttpError(400, { message: 'Error en los parámetros de entrada' }))
         } else {
-
-            const user = { username: body.username, 
-                           password: body.password, 
-                           role:body.role ||'user' 
-                        };
 
             const result = await userModel.createUser(user);
             if (!result.length)
@@ -33,7 +28,7 @@ const register = async (req, res, next) => {
         }
 
     } catch (error) {
-        next(HttpError(400, { message:error.message}));
+        next(HttpError(400, { message: error.message }));
     }
 
 
@@ -43,29 +38,19 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
 
     try {
-        const body = req.body;
+        const user = req.body;
 
-        if (!body.username || !body.password) {
+        if (!user.username || !user.password) {
             next(HttpError(400, { message: 'Error en los parámetros de entrada' }))
         } else {
-            
-            const result = userModel.getUser({ username: body.username });
 
-            if (result === undefined) {
-                next(HttpError(401, { message: 'Username or Password incorrect' }));
-            } else {
-                const passwordCorrect = await bcrypt.compare(body.password, result.password);
-                if (!passwordCorrect) {
-                    next(HttpError(401, { message: 'Username or Password incorrect' }));
-                }
-                else {
-                    //GENERAMOS EL TOKEN
-                    const token = await authHandler.generateToken(body.username);
-                    res.status(200).json({ token: token });
-                }
-            }
+            const result = await userModel.login(user);
+
+            const token = await authHandler.generateToken(result.userID);
+            res.status(200).json({ token: token });
         }
     }
+
     catch (error) {
         next(error);
     }

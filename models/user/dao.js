@@ -1,8 +1,10 @@
 // import users from '../data/users.js';
 import connection from '../mysql/dbManager.js';
+import User from './pojo.js';
 
-class User{
+class UserDAO{
 
+    userPojo = new User();
     async login(user){
         try {
             const result= await connection.query(
@@ -34,7 +36,7 @@ class User{
     getUser(id){
         try {
             
-            return await connection.query('select username from user where user_id = ?',[id])
+            return await connection.query(this.userPojo.selectUser(),[id])
         } catch (error) {
             throw error;
         }

@@ -5,30 +5,6 @@ import userModel from "../models/userModel.js";
 
 
 
-const encryptPassword = async (req, res, next) => {
-    try {
-        const saltRounds = 10;
-
-        const passwordHash = await bcrypt.hash(req.body.password, saltRounds);
-        req.body.password = passwordHash;
-        // console.log(passwordHash);
-        next();
-    } catch (error) {
-        next(error);
-    }
-}
-
-// const decryptPassword = async (req, res, next) => {
-//     try {
-//         const passwordCorrect = await bcrypt.compare(req.body.password, user.password)
-//         if(passwordCorrect){
-//             next()
-//         }
-//     }
-//     catch(error){
-//         next(error);
-//     }
-
 const getTokenFrom = request => {
     const authorization = request.get('authorization');
 
@@ -59,9 +35,9 @@ const authUser = async (req, res, next) => {
 
 }
 
-const generateToken = username => {
+const generateToken = id => {
 
-    return jwt.sign({username: username},process.env.SECRET);
+    return jwt.sign({sub: id},process.env.SECRET);
   
 
 }
